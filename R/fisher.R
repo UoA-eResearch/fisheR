@@ -1,4 +1,4 @@
-fisher = function(df, sos = c(), w_size = 8, w_incre = 1) {
+fisher = function(df, sos = c(), w_size = 8, w_incre = 1, smooth_step = 3, xtick_step = 1) {
   if (length(sos) == 0) {
     sos = sost(df)
   }
@@ -64,9 +64,21 @@ fisher = function(df, sos = c(), w_size = 8, w_incre = 1) {
   }
   FI_means = rowMeans(FI_final[,min(k_init):ncol(FI_final)])
   time_windows = df[1:nrow(FI_final) * w_incre + w_size - 1, 1]
-  FI_final = cbind(FI_final, FI_means, time_windows)
+
+  FI_smth = c()
+  for (i in seq(smooth_step + 1, nrow(df_FI)+smooth_step, smooth_step)) {
+    for (j in 1:smooth_step) {
+      FI_smth = c(FI_smth, mean(FI_means[(i-smooth_step):(i - 1)], na.rm=TRUE))
+    }
+  }
+  FI_smth = FI_smth[1:nrow(df_FI)]
+  FI_final = cbind(FI_final, FI_means, FI_smth, time_windows)
+
   df_FI = as.data.frame(FI_final)
   write.table(df_FI, "FI.csv", sep=",", col.names = FALSE, row.names = FALSE)
+
+  plot(df_FI$time_windows, df_FI$FI_means, type="l", col="blue")
+  lines(df_FI$time_windows, df_FI$FI_smth, type="l", col="red")
   df_FI
 
 }
