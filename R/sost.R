@@ -1,8 +1,6 @@
-df = read.csv("sample_data.csv", header=F)
-df[is.na(df)] = 0
-
 sost = function(df, w_size = 8) {
   sos = c()
+  df[is.na(df)] = 0
   for (j in 2:ncol(df)) {
     sos_temp = c()
     for (i in 1:nrow(df)) {
@@ -19,5 +17,3 @@ sost = function(df, w_size = 8) {
   }
   sos
 }
-
-sos = sost(df)

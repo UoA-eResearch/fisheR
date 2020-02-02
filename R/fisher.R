@@ -2,6 +2,7 @@ fisher = function(df, sos = c(), w_size = 8, w_incre = 1, smooth_step = 3, xtick
   if (length(sos) == 0) {
     sos = sost(df)
   }
+  df[is.na(df)] = 0
   FI_final = c()
   k_init = c()
   for (i in seq(1, nrow(df), w_incre)) {
@@ -66,12 +67,12 @@ fisher = function(df, sos = c(), w_size = 8, w_incre = 1, smooth_step = 3, xtick
   time_windows = df[1:nrow(FI_final) * w_incre + w_size - 1, 1]
 
   FI_smth = c()
-  for (i in seq(smooth_step + 1, nrow(df_FI)+smooth_step, smooth_step)) {
+  for (i in seq(smooth_step + 1, length(FI_means)+smooth_step, smooth_step)) {
     for (j in 1:smooth_step) {
       FI_smth = c(FI_smth, mean(FI_means[(i-smooth_step):(i - 1)], na.rm=TRUE))
     }
   }
-  FI_smth = FI_smth[1:nrow(df_FI)]
+  FI_smth = FI_smth[1:length(FI_means)]
   FI_final = cbind(FI_final, FI_means, FI_smth, time_windows)
 
   df_FI = as.data.frame(FI_final)
@@ -82,5 +83,3 @@ fisher = function(df, sos = c(), w_size = 8, w_incre = 1, smooth_step = 3, xtick
   df_FI
 
 }
-
-df_FI = fisher(df, sos = sos)
