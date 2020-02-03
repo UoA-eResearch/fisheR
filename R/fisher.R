@@ -81,8 +81,14 @@ fisher = function(df, sos = c(), w_size = 8, w_incre = 1, smooth_step = 3, xtick
   FI_final = cbind(FI_final, FI_means, FI_smth, time_windows)
 
   df_FI = as.data.frame(FI_final)
+
+  #if (write_out_csv == TRUE) {}
   write.table(df_FI, "FI.csv", sep=",", col.names = FALSE, row.names = FALSE)
 
+  #if (write_out_rds == TRUE)
+  #saveRDS(df_FI, "FI.RData")
+
+  #if (plot_out == TURE) {}
   plot(df_FI$time_windows, df_FI$FI_means, type="l", col="blue", xlab = "Time Step", ylab = "Fisher Information")
   lines(df_FI$time_windows, df_FI$FI_smth, type="l", col="red")
   df_FI
