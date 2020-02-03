@@ -7,6 +7,7 @@
 #'
 #' @param df A dataframe containing time information and variables of interest
 #' @param sos An option vector containing size of state
+#' @param w_size Window size
 #' @param w_incr Window increment
 #' @param smooth_step Window size for the smoothing operation
 #' @param xtick_step Number of ticks on the x axis (currently unused)
