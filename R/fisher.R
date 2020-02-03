@@ -1,7 +1,16 @@
-# The fisher function calculates the Fisher's Information following:
-# Cabezas, H., Campbell, D., Eason, T., Garmestani, A. S., Heberling, M. T., Hopton, M. E., Templeton, J., White, D., Zanowick, M., & Sparks, R. T. (2010). San Luis Basin sustainability metrics project: A methodology for evaluating regional sustainability. USEPA. USA.
-# Eason, T., & Cabezas, H. (2012). Evaluating the sustainability of a regional system using Fisher information in the San Luis Basin, Colorado. Journal of Environmental Management, 94(1), 41–49. https://doi.org/10.1016/j.jenvman.2011.08.003
-# Ahmad, N., Derrible, S., Eason, T., & Cabezas, H. (2016). Using Fisher information to track stability in multivariate systems. Royal Society Open Science, 3(11), 160582. https://doi.org/10.1098/rsos.160582
+#' Fisher function
+#'
+#' The fisher function calculates the Fisher's Information following:
+#' Cabezas, H., Campbell, D., Eason, T., Garmestani, A. S., Heberling, M. T., Hopton, M. E., Templeton, J., White, D., Zanowick, M., & Sparks, R. T. (2010). San Luis Basin sustainability metrics project: A methodology for evaluating regional sustainability. USEPA. USA.
+#' Eason, T., & Cabezas, H. (2012). Evaluating the sustainability of a regional system using Fisher information in the San Luis Basin, Colorado. Journal of Environmental Management, 94(1), 41–49. https://doi.org/10.1016/j.jenvman.2011.08.003
+#' Ahmad, N., Derrible, S., Eason, T., & Cabezas, H. (2016). Using Fisher information to track stability in multivariate systems. Royal Society Open Science, 3(11), 160582. https://doi.org/10.1098/rsos.160582
+#'
+#' @param df A dataframe containing time information and variables of interest
+#' @param sos An option vector containing size of state
+#' @param w_incr Window increment
+#' @param smooth_step Window size for the smoothing operation
+#' @param xtick_step Number of ticks on the x axis (currently unused)
+#' @returns A dataframe where the last three columns are the Fisher's Information means, Fisher's Information smoothed and time-steps
 
 fisher = function(df, sos = c(), w_size = 8, w_incre = 1, smooth_step = 3, xtick_step = 1) {
   if (length(sos) == 0) {
