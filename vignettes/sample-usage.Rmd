@@ -1,8 +1,12 @@
 ---
 title: "fisheR sample usage"
-author: "Nick & Quinn"
+author: "Nick Young & Quinn Asena"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
+fig_caption: yes
+bibliography: library.bib
+biblio-style: apalike
+link-citations: yes  
 vignette: >
   %\VignetteIndexEntry{Vignette Title}
   %\VignetteEngine{knitr::rmarkdown}
@@ -16,52 +20,34 @@ knitr::opts_chunk$set(
 )
 ```
 
-Vignettes are long form documentation commonly included in packages. Because they are part of the distribution of the package, they need to be as compact as possible. The `html_vignette` output type provides a custom style sheet (and tweaks some options) to ensure that the resulting html is as small as possible. The `html_vignette` format:
+## Package info
+This package for calculating Fisher's information follows methods from @cabezas_san_2010, @eason_evaluating_2012, and @ahmad_using_2016. Python code from @ahmad_using_2016 and MATLAB code from @cabezas_san_2010 has been adapted for modelling purposes in R. For reproducibility purposes we use the 'sample_data' provided by @ahmad_using_2016 as an example which is the GDP per capita and total population of the USA from 1960 to 2013. For detailed descriptions on how to conduct Fisher's information see @cabezas_san_2010, @eason_evaluating_2012 and @ahmad_using_2016, we recommend reading these references first if unfamiliar with Fisher's Information.
 
-- Never uses retina figures
-- Has a smaller default figure size
-- Uses a custom CSS stylesheet instead of the default Twitter Bootstrap style
+## Example run
+The `fisher` function takes a dataframe as an input and an optional size of state (`sos`) dataframe. If a size of state dataframe is not provided one will be created following methods from @cabezas_san_2010, @eason_evaluating_2012 and @ahmad_using_2016.
 
-## Vignette Info
+The `fisher` function calculates: 1) the size of state; 2) Fisher's Information; and 3) Fisher's Information smoothed with a block mean of the desired window size. The final output is a dataframe where the last three columns are the Fisher's Information means, Fisher's Information smoothed and time-steps
 
-Note the various macros within the `vignette` section of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the `title` field and the `\VignetteIndexEntry` to match the title of your vignette.
+**NOTE:**
 
-## Styles
+  * Data structure must have the first column as time-steps and following columns containing the variables of interest
+  
+  * NA values will be replaced by 0
+  
+  * Take care with the `header` argument if reading in a csv
 
-The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
+  
 
-    output: 
-      rmarkdown::html_vignette:
-        css: mystyles.css
-
-## Figures
-
-The figure sizes have been customised so that you can easily put two images side-by-side. 
-
-```{r, fig.show='hold'}
+```{r, fig.show='hold', fig.cap = "Fisher's Information calculated from the Sample Data"}
 library(fisheR)
 df = read.csv("../sample_data.csv", header=F)
 sos = sost(df)
 df_FI = fisher(df, sos = sos)
 ```
 
-You can enable figure captions by `fig_caption: yes` in YAML:
-
-    output:
-      rmarkdown::html_vignette:
-        fig_caption: yes
-
-Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
-
-## More Examples
-
-You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
-
-```{r, echo=FALSE, results='asis'}
-knitr::kable(head(mtcars, 10))
-```
 
 Also a quote using `>`:
 
-> "He who gives up [code] safety for [code] speed deserves neither."
-([via](https://twitter.com/hadleywickham/status/504368538874703872))
+> "To consult the statistician after an experiment is finished is often merely to ask him to conduct _a post mortem_ examination. He can
+ perhaps say what the experiment"
+  - R. A. Fisher [@fisher_presidential_1938]
