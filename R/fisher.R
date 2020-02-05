@@ -91,6 +91,7 @@ fisher = function(df, sos = c(), w_size = 8, w_incre = 1, smooth_step = 3, xtick
   FI_smth = FI_smth[1:length(FI_means)]
   FI_final = cbind(FI_final, FI_means, FI_smth, time_windows)
 
+  rownames(FI_final) = NULL
   df_FI = as.data.frame(FI_final)
 
   #if (write_out_csv == TRUE) {}
