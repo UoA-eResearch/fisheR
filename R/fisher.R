@@ -14,6 +14,7 @@
 #' @returns A dataframe where the last three columns are the Fisher's Information means, Fisher's Information smoothed and time-steps
 
 fisher = function(df, sos = c(), w_size = 8, w_incre = 1, smooth_step = 3, xtick_step = 1) {
+  start_time <- as.numeric(Sys.time())
   if (length(sos) == 0) {
     sos = sost(df)
   }
@@ -101,6 +102,7 @@ fisher = function(df, sos = c(), w_size = 8, w_incre = 1, smooth_step = 3, xtick
   #if (plot_out == TURE) {}
   plot(df_FI$time_windows, df_FI$FI_means, type="l", col="blue", xlab = "Time Step", ylab = "Fisher Information")
   lines(df_FI$time_windows, df_FI$FI_smth, type="l", col="red")
+  print(sprintf("Completed in %.2f seconds", as.numeric(Sys.time()) - start_time))
   df_FI
 
 }
