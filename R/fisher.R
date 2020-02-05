@@ -51,7 +51,7 @@ fisher = function(df, sos = c(), w_size = 8, w_incre = 1, smooth_step = 3, xtick
           if (!(j %in% Bin_2)) {
             Bin_1_temp = c(j)
             for (i in 1:ncol(Bin)) {
-              if (Bin[j,i] != "I" && Bin[j,i] >= tl1 && !(i %in% Bin_2)) {
+              if (Bin[j,i] != "I" && as.numeric(Bin[j,i]) >= tl1 && !(i %in% Bin_2)) {
                 Bin_1_temp = c(Bin_1_temp, i)
               }
             }
