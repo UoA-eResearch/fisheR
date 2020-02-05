@@ -11,6 +11,8 @@ fisher(df, sos = c(), w_size = 8, w_incre = 1, smooth_step = 3, xtick_step = 1)
 
 \item{sos}{An option vector containing size of state}
 
+\item{w_size}{Window size}
+
 \item{smooth_step}{Window size for the smoothing operation}
 
 \item{xtick_step}{Number of ticks on the x axis (currently unused)}
