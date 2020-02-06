@@ -21,16 +21,16 @@ knitr::opts_chunk$set(
 ```
 
 ## Package info
-This package for calculating Fisher's information follows methods from @cabezas_san_2010, @eason_evaluating_2012, and @ahmad_using_2016. Python code from @ahmad_using_2016 and MATLAB code from @cabezas_san_2010 has been adapted for modelling purposes in R. For reproducibility purposes we use the 'sample_data' provided by @ahmad_using_2016 as an example which is the GDP per capita and total population of the USA from 1960 to 2013. For detailed descriptions on how to conduct Fisher's information see @cabezas_san_2010, @eason_evaluating_2012 and @ahmad_using_2016, we recommend reading these references first if unfamiliar with Fisher's Information.
+This package for calculating Fisher's information follows methods from @cabezas_san_2010, @eason_evaluating_2012, and @ahmad_using_2016. Python code from @ahmad_using_2016 and MATLAB code from @cabezas_san_2010 has been adapted for modelling in R. For reproducibility purposes we use the 'sample_data' provided by @ahmad_using_2016 as an example which is the GDP per capita and total population of the USA from 1960 to 2013. For detailed descriptions on how to conduct Fisher's information see @cabezas_san_2010, @eason_evaluating_2012 and @ahmad_using_2016, we recommend reading these references first if unfamiliar with Fisher's Information.
 
 ## Example run
 The `fisher` function takes a dataframe as an input and an optional size of state (`sos`) dataframe. If a size of state dataframe is not provided one will be created following methods from @cabezas_san_2010, @eason_evaluating_2012 and @ahmad_using_2016.
 
-The `fisher` function calculates: 1) the size of state; 2) Fisher's Information; and 3) Fisher's Information smoothed with a block mean of the desired window size. The final output is a dataframe where the last three columns are the Fisher's Information means, Fisher's Information smoothed and time-steps
+The `fisher` function calculates: 1) the size of state; 2) Fisher's Information; and 3) Fisher's Information smoothed with a block mean of the desired window size. The final output is a dataframe where the last three columns are the Fisher's Information means, Fisher's Information smoothed and time-windows.
 
 **NOTE:**
 
-  * Data structure must have the first column as time-steps and following columns containing the variables of interest
+  * Data structure for input dataframe must have the first column as time-steps and following columns containing the variables of interest
   
   * NA values will be replaced by 0
   
@@ -45,8 +45,6 @@ sos = sost(df)
 df_FI = fisher(df, sos = sos)
 ```
 
-
-Also a quote using `>`:
 
 > "To consult the statistician after an experiment is finished is often merely to ask him to conduct _a post mortem_ examination. He can
  perhaps say what the experiment"

@@ -13,10 +13,10 @@
 #' @param xtick_step Number of ticks on the x axis (currently unused)
 #' @returns A dataframe where the last three columns are the Fisher's Information means, Fisher's Information smoothed and time-steps
 
-fisher = function(df, sos = c(), w_size = 8, w_incre = 1, smooth_step = 3, xtick_step = 1) {
+fisher = function(df, sos = c(), w_size = 8, w_incre = 1, smooth_step = 3, RedRum = FALSE, write_out_csv = FALSE, write_out_rds = FALSE, display_plot = FALSE) {
   start_time <- as.numeric(Sys.time())
   if (length(sos) == 0) {
-    sos = sost(df)
+    sos = sost(df) #w_size = w_size (window size from sost(df), should presumably match window size for FI?)
   }
   df[is.na(df)] = 0
   FI_final = c()
@@ -45,6 +45,9 @@ fisher = function(df, sos = c(), w_size = 8, w_incre = 1, smooth_step = 3, xtick
       #print(Bin)
       FI = c()
       for (tl in 1:100) {
+        if (RedRum){
+          print("All work and no play makes Jack a dull boy")
+        }
         tl1 = length(sos) * tl / 100
         Bin_1 = c()
         Bin_2 = c()
@@ -94,16 +97,18 @@ fisher = function(df, sos = c(), w_size = 8, w_incre = 1, smooth_step = 3, xtick
   rownames(FI_final) = NULL
   df_FI = as.data.frame(FI_final)
 
-  #if (write_out_csv == TRUE) {}
+  if (write_out_csv == TRUE) {
   write.table(df_FI, "FI.csv", sep=",", col.names = FALSE, row.names = FALSE)
+  }
 
-  #if (write_out_rds == TRUE)
-  #saveRDS(df_FI, "FI.RData")
+  if (write_out_rds == TRUE) {
+  saveRDS(df_FI, "FI.RData")
+  }
 
-  #if (plot_out == TURE) {}
+  if (display_plot == TRUE) {
   plot(df_FI$time_windows, df_FI$FI_means, type="l", col="blue", xlab = "Time Step", ylab = "Fisher Information")
   lines(df_FI$time_windows, df_FI$FI_smth, type="l", col="red")
+  }
   print(sprintf("Completed in %.2f seconds", as.numeric(Sys.time()) - start_time))
   df_FI
-
 }
