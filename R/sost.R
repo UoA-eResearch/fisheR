@@ -12,6 +12,18 @@
 
 
 sost = function(df, w_size = 8) {
+
+  if (any(unlist(lapply(df, is.numeric)) == FALSE)) {
+    stop("All columns must be numeric, check structure. First column should be time and all following columns the variables of interest")
+  } else {
+    cat("Structure seems good, figuring out size of state")
+  }
+
+  if (is_tibble(df)) {
+    warning("Tibble format not suited to fishR, converting to data.frame")
+    df <- as.data.frame(df)
+  }
+
   sos = c()
   df[is.na(df)] = 0
   for (j in 2:ncol(df)) {
