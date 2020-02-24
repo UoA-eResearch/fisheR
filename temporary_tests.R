@@ -78,6 +78,12 @@ data1$V1 <- as.Date(as.yearmon(data1$V1))
 str(data1)
 
 
+if (!(any(unlist(lapply(data, class)) %in% c("numeric", "integer", "factor", "character") ) ) == FALSE) {
+  stop("All columns must be numeric, check structure. First column should be time and all following columns the variables of interest")
+} else {
+  cat("Structure seems good, Cookie Monster says \"num, num, num\", let's go fishing")
+}
+
 if (any(unlist(lapply(data1, is.numeric)) == FALSE)) {
   warning("All columns must be numeric, will attempt to convert to numeric")
   data1[] <- lapply(data1, function(x) {

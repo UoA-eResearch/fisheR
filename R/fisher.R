@@ -16,15 +16,15 @@
 fisher = function(df, sos = c(), w_size = 8, w_incre = 1, smooth_step = 3, RedRum = FALSE, write_out_csv = FALSE, write_out_rds = FALSE, display_plot = FALSE) {
   start_time <- as.numeric(Sys.time())
 
+  if (is.data.frame(df) == FALSE) {
+    warning("fisher requires a dataframe (tibble format not suitable), attempting to converting to data.frame")
+    df <- as.data.frame(df)
+  }
+
   if (any(unlist(lapply(df, is.numeric)) == FALSE)) {
     stop("All columns must be numeric, check structure. First column should be time and all following columns the variables of interest")
   } else {
     cat("Structure seems good, Cookie Monster says \"num, num, num\", let's go fishing")
-  }
-
-  if (is_tibble(df)) {
-    warning("Tibble format not suited to fishR, converting to data.frame")
-    df <- as.data.frame(df)
   }
 
   if (length(sos) == 0) {
