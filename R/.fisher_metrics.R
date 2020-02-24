@@ -40,11 +40,11 @@ sample_data <- read.csv("C:/Users/qase352/Dropbox/QuinnAsenaPhD/R/fishers_inform
 head(sample_data)
 
 qdata <- readRDS("C:/Users/qase352/Desktop/1_complete_output.RData")
-x <- as.data.frame(qdata[[1]][[4]][1:500, 1:50])
-time <- 1:nrow(x)
-x <- cbind(time,x)
-head(x)
-qfish <- fisher(x, display_plot = T)
+sub_qdata <- as.data.frame(qdata[[1]][[4]][1:500, 1:50])
+time <- 1:nrow(sub_qdata)
+sub_qdata <- cbind(time,sub_qdata)
+head(sub_qdata)
+qfish <- fisher(sub_qdata, display_plot = T)
 plot(qfish$time_windows, qfish$FI_means, type="l", col="blue", xlab = "Time Step", ylab = "Fisher Information")
 lines(qfish$time_windows, qfish$FI_smth, type="l", col="red")
 

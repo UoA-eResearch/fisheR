@@ -24,7 +24,7 @@ fisher = function(df, sos = c(), w_size = 8, w_incre = 1, smooth_step = 3, RedRu
   if (any(unlist(lapply(df, is.numeric)) == FALSE)) {
     stop("All columns must be numeric, check structure. First column should be time and all following columns the variables of interest")
   } else {
-    cat("Structure seems good, Cookie Monster says \"num, num, num\", let's go fishing")
+    cat("Structure seems good, Cookie Monster says \"num, num, num\", let's go fishing... \n")
   }
 
   if (length(sos) == 0) {

@@ -13,15 +13,15 @@
 
 sost = function(df, w_size = 8) {
 
-  if (is.data.frame(df) == FALSE) {
-    warning("sost requires a dataframe, attempting to converting to data.frame")
+  if (class(df)[1] != "data.frame") {
+    warning("fisher requires a dataframe (tibble format not suitable), attempting to converting to data.frame")
     df <- as.data.frame(df)
   }
 
   if (any(unlist(lapply(df, is.numeric)) == FALSE)) {
     stop("All columns must be numeric, check structure. First column should be time and all following columns the variables of interest")
   } else {
-    cat("Structure seems good, Cookie Monster says \"num, num, num\", let's go fishing")
+    cat("figureing out size of states...")
   }
 
   sos = c()

@@ -1,3 +1,11 @@
+#' Conversion function
+#'
+#' Conversion function attempts to force input data structure to correct format (i.e., numeric data). *NOTE, does not attempt to rearrange columns or format dates*. Outputs must still be manually checked.
+#'
+#' @param df A dataframe containing time information and variables of interest
+#' @returns A dataframe with each column as numeric data
+
+
 conversion_func <-  function(df) {
   cat("Current structure: \n") # Should be able to do this in a single cat call right?!
   cat(str(df), "\n")
