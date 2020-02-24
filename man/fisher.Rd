@@ -4,7 +4,17 @@
 \alias{fisher}
 \title{Fisher function}
 \usage{
-fisher(df, sos = c(), w_size = 8, w_incre = 1, smooth_step = 3, xtick_step = 1)
+fisher(
+  df,
+  sos = c(),
+  w_size = 8,
+  w_incre = 1,
+  smooth_step = 3,
+  RedRum = FALSE,
+  write_out_csv = FALSE,
+  write_out_rds = FALSE,
+  display_plot = FALSE
+)
 }
 \arguments{
 \item{df}{A dataframe containing time information and variables of interest}
@@ -15,9 +25,9 @@ fisher(df, sos = c(), w_size = 8, w_incre = 1, smooth_step = 3, xtick_step = 1)
 
 \item{smooth_step}{Window size for the smoothing operation}
 
-\item{xtick_step}{Number of ticks on the x axis (currently unused)}
-
 \item{w_incr}{Window increment}
+
+\item{xtick_step}{Number of ticks on the x axis (currently unused)}
 }
 \value{
 A dataframe where the last three columns are the Fisher's Information means, Fisher's Information smoothed and time-steps

@@ -1,4 +1,4 @@
-## ----setup, include = FALSE----------------------------------------------
+## ----setup, include = FALSE---------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
@@ -8,5 +8,5 @@ knitr::opts_chunk$set(
 library(fisheR)
 df = read.csv("../sample_data.csv", header=F)
 sos = sost(df)
-df_FI = fisher(df, sos = sos)
+df_FI = fisher(df, sos = sos, display_plot = TRUE)
 

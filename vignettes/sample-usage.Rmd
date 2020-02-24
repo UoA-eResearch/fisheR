@@ -42,7 +42,7 @@ The `fisher` function calculates: 1) the size of state; 2) Fisher's Information;
 library(fisheR)
 df = read.csv("../sample_data.csv", header=F)
 sos = sost(df)
-df_FI = fisher(df, sos = sos)
+df_FI = fisher(df, sos = sos, display_plot = TRUE)
 ```
 
 
