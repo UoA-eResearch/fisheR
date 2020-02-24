@@ -16,7 +16,7 @@
 fisher = function(df, sos = c(), w_size = 8, w_incre = 1, smooth_step = 3, RedRum = FALSE, write_out_csv = FALSE, write_out_rds = FALSE, display_plot = FALSE) {
   start_time <- as.numeric(Sys.time())
 
-  if (is.data.frame(df) == FALSE) {
+  if (class(df)[1] != "data.frame") {
     warning("fisher requires a dataframe (tibble format not suitable), attempting to converting to data.frame")
     df <- as.data.frame(df)
   }
