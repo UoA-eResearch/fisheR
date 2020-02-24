@@ -28,12 +28,17 @@ fisher = function(df, sos = c(), w_size = 8, w_incre = 1, smooth_step = 3, RedRu
   }
 
   if (length(sos) == 0) {
-    sos = sost(df) #w_size = w_size (window size from sost(df), should presumably match window size for FI?)
+    sos = sost(df, w_size = w_size)
   }
   df[is.na(df)] = 0
   FI_final = c()
   k_init = c()
-  for (i in seq(1, nrow(df), w_incre)) {
+  window_seq = seq(1, nrow(df), w_incre)
+  number_of_states_per_tl = matrix(ncol = 100, nrow = length(window_seq) - (w_size - 1))
+  rownames(number_of_states_per_tl) = paste0("wi", window_seq[1:(length(window_seq) - (w_size - 1))])
+  colnames(number_of_states_per_tl) = paste0("tl", 1:100)
+  for (i in window_seq) {
+    window_index_str = paste0("wi", as.character(i))
     Data_win = na.omit(df[i:(i+w_size - 1),2:ncol(df)])
     if (nrow(Data_win) == w_size) {
       Bin = c()
@@ -75,6 +80,7 @@ fisher = function(df, sos = c(), w_size = 8, w_incre = 1, smooth_step = 3, RedRu
             Bin_2 = c(Bin_2, Bin_1_temp)
           }
         }
+        number_of_states_per_tl[window_index_str, paste0("tl", tl)] = length(Bin_1)
         prob = c(0, lengths(Bin_1) / length(Bin_2), 0)
         prob_q = sqrt(prob)
         FI_temp = 0
@@ -122,5 +128,6 @@ fisher = function(df, sos = c(), w_size = 8, w_incre = 1, smooth_step = 3, RedRu
   lines(df_FI$time_windows, df_FI$FI_smth, type="l", col="red")
   }
   print(sprintf("Completed in %.2f seconds", as.numeric(Sys.time()) - start_time))
-  df_FI
+  #list(df = df_FI, number_of_states_per_tl = number_of_states_per_tl)
+  cbind(number_of_states_per_tl, df_FI)
 }
