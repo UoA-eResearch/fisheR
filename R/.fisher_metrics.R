@@ -3,7 +3,7 @@ fisher_metrics function(fisher_df) {
     max_fish = max(fisher_df$FI_means)
     min_fish = min(fisher_df$FI_means)
     range_fish = max_fish - min_fish
-    mid_point = max_fish / 2
+    mid_range = (max_fish + min_fish) / 2
     mu = mean(fisher_df$FI_means)
     std = sd(fisher_df$FI_means)
     variance = var(fisher_df$FI_means)
@@ -13,6 +13,15 @@ fisher_metrics function(fisher_df) {
     timeof_max_pos_roc = fisher_df$time_windows[which.max(percent_roc)]
     timeofmin_pos_roc = fisher_df$time_windows[which.min(percent_roc)]
 
+    largest_drop_by+step <- max(diff(fisher_df$FI_means, lag = 5))
+
+
+    no_unique_states <- apply(fisher_df[,1:100], MARGIN = 2, function(x){length(unique(x))
+      })
+    no_unique_states
+    mean(no_unique_states)
+    median(no_unique_states)
+    exp(mean(log(no_unique_states)))
 
 
   longest run of increasing numbers
@@ -110,7 +119,14 @@ lines(ts(fitted(fm1), start = 0), col = 4)
 lines(bp.qfish)
 
 
+bcp package for breakpoint
+changepoint package for breakpoint
 
+rle for 1s and 0s
+
+GAM
+FATS - Feature Analysis
+FPCA - functional pca
 
 
 
