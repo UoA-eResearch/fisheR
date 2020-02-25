@@ -13,7 +13,7 @@ fisher_metrics function(fisher_df) {
     timeof_max_pos_roc = fisher_df$time_windows[which.max(percent_roc)]
     timeofmin_pos_roc = fisher_df$time_windows[which.min(percent_roc)]
 
-    largest_drop_by+step <- max(diff(fisher_df$FI_means, lag = 5))
+    largest_drop_by_step <- max(diff(fisher_df$FI_means, lag = 5))
 
 
     no_unique_states <- apply(fisher_df[,1:100], MARGIN = 2, function(x){length(unique(x))

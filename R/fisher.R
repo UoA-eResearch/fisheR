@@ -103,8 +103,8 @@ fisher = function(df, sos = c(), w_size = 8, w_incre = 1, smooth_step = 3, RedRu
   }
   FI_means = rowMeans(FI_final[,min(k_init):ncol(FI_final)])
   time_windows = df[1:nrow(FI_final) * w_incre + w_size - 1, 1]
-  state_means = rowMeans(number_of_states_per_tl[,min(k_init):ncol(number_of_states_per_tl)]) # function needs to be checked
-  state_medians = rowMedians(number_of_states_per_tl[,min(k_init):ncol(number_of_states_per_tl)]) # function needs to be checked
+  mean_no_states = rowMeans(number_of_states_per_tl[,min(k_init):ncol(number_of_states_per_tl)]) # function needs to be checked
+  median_no_states = rowMedians(number_of_states_per_tl[,min(k_init):ncol(number_of_states_per_tl)]) # function needs to be checked
 
 
   FI_smth = c()
@@ -114,7 +114,7 @@ fisher = function(df, sos = c(), w_size = 8, w_incre = 1, smooth_step = 3, RedRu
     }
   }
   FI_smth = FI_smth[1:length(FI_means)]
-  FI_final = cbind(FI_final, FI_means, FI_smth, state_means, state_medians, time_windows)
+  FI_final = cbind(FI_final, FI_means, FI_smth, mean_no_states, median_no_states, time_windows)
 
   rownames(FI_final) = NULL
   df_FI = as.data.frame(FI_final)
