@@ -21,7 +21,7 @@ sost = function(df, w_size = 8) {
   if (any(unlist(lapply(df, is.numeric)) == FALSE)) {
     stop("All columns must be numeric, check structure. First column should be time and all following columns the variables of interest")
   } else {
-    cat("figureing out size of states...")
+    cat("figuring out size of states...")
   }
 
   sos = c()
