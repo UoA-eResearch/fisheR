@@ -16,43 +16,51 @@ fisher_metrics function(fisher_df) {
     kurt = kurtosis(fisher_df$FI_means)
     mad <- median(abs(fisher_df$FI_means - median(fisher_df$FI_means))) # Median Absolute Deviation
 
-    percent_roc = 100 * diff(fisher_df$FI_means) / fisher_df[-nrow(fisher_df), ]$FI_means
-    abs_pos_roc <- abs(max(percent_roc))
-    max_pos_roc = max(percent_roc)
-    min_pos_roc = min(percent_roc)
-    timeof_max_pos_roc = fisher_df$time_windows[which.max(percent_roc)]
-    timeof_min_pos_roc = fisher_df$time_windows[which.min(percent_roc)]
-    timeof_min_abs_pos_roc = fisher_df$time_windows[which.max(abs(percent_roc))]
+    max_percent_diff_from_median <- max(fisher_df$FI_means - median(fisher_df$FI_means)) / median(fisher_df$FI_means)
+    min_percent_diff_from_median <- min(fisher_df$FI_means - median(fisher_df$FI_means)) / median(fisher_df$FI_means)
+    abs_percent_diff_from_median <- max(abs(fisher_df$FI_means - median(fisher_df$FI_means))) / median(fisher_df$FI_means)
 
+    max_percent_diff_from_mean <- max(fisher_df$FI_means - mean(fisher_df$FI_means)) / mean(fisher_df$FI_means)
+    min_percent_diff_from_mean <- min(fisher_df$FI_means - mean(fisher_df$FI_means)) / mean(fisher_df$FI_means)
+    abs_percent_diff_from_mean <- max(abs(fisher_df$FI_means - mean(fisher_df$FI_means))) / mean(fisher_df$FI_means)
+
+    # percent rate of change
+    percent_roc = 100 * diff(fisher_df$FI_means) / fisher_df[-nrow(fisher_df), ]$FI_means
+    abs_roc <- abs(max(percent_roc))
+    max_pos_roc = max(percent_roc)
+    min_neg_roc = min(percent_roc)
+    timeof_max_pos_roc = fisher_df$time_windows[which.max(percent_roc)]
+    timeof_min_neg_roc = fisher_df$time_windows[which.min(percent_roc)]
+    timeof_abs_pos_roc = fisher_df$time_windows[which.max(abs(percent_roc))]
+    max_run_of_roc_increase <- max(rle(sign(percent_roc))[[1]][rle(sign(percent_roc))[[2]] == 1])
+    max_run_of_roc_decrease <- max(rle(sign(percent_roc))[[1]][rle(sign(percent_roc))[[2]] == -1])
+
+    #slope:
     slope <- diff(fisher_df$FI_means) / diff(fisher_df$time_windows)
     max_slope <- max(slope)
     min_slope <-  min(slope)
     max_abs_slope <-  max(abs(slope))
     timeof_max_slope = fisher_df$time_windows[which.max(slope)]
     timeof_min_slope = fisher_df$time_windows[which.min(slope)]
-    timeof_min_abs_slope = fisher_df$time_windows[which.max(abs(slope))]
+    timeof_abs_slope = fisher_df$time_windows[which.max(abs(slope))]
+    max_run_of_slope_increase <- max(rle(sign(slope))[[1]][rle(sign(slope))[[2]] == 1])
+    max_run_of_slope_decrease <- max(rle(sign(slope))[[1]][rle(sign(slope))[[2]] == -1])
 
-    # ORIGINAL
-    # Considering the last 30 (time-sorted) measurements of source magnitude,
-    # the fraction of increasing first differences minus the fraction of
-    # decreasing first differences.
-    # """
-    #
-    # def __init__(self):
-    #     self.Data = ['magnitude']
-    #
-    # def fit(self, data):
-    #     magnitude = data[0]
-    #     data_last = magnitude[-30:]
-    #
-    #     return (float(len(np.where(np.diff(data_last) > 0)[0]) -
-    #             len(np.where(np.diff(data_last) <= 0)[0])) / 30)
+    run_of_increase <- max(rle(sign(diff(fisher_df$FI_means)))[[1]][rle(sign(diff(fisher_df$FI_means)))[[2]] == 1])
+    run_of_decrease <- max(rle(sign(diff(fisher_df$FI_means)))[[1]][rle(sign(diff(fisher_df$FI_means)))[[2]] == -1])
 
-    #Fraction of increasing and decreasing first differences
-    frac <- table(diff(fisher_df$FI_means) > 0)
-    frac_inc <- frac[["TRUE"]] / length(fisher_df$FI_means)
-    frac_dec <- frac[["FALSE"]] / length(fisher_df$FI_means)
-    (frac[["TRUE"]] - frac[["FALSE"]]) / length(fisher_df$FI_means)
+
+    max_time_windows_in_median_states <- max(rle(fisher_df$median_no_states)[[1]])
+    median_states_at_max_time_windows <- rle(fisher_df$median_no_states)[[2]][max(rle(fisher_df$median_no_states)[[1]])]
+
+
+    max_time_windows_in_mean_states <- max(rle(fisher_df$mean_no_states)[[1]])
+    mean_states_at_max_time_windows <- rle(fisher_df$mean_no_states)[[2]][max(rle(fisher_df$mean_no_states)[[1]])]
+
+    # rate at longest run of increasing numbers
+    # rate at longest run of decreasing numbers
+    # slope at longest run of increasing numbers
+    # slope at longest run of decreasing numbers
 
 
     s <- cumsum(fisher_df$FI_means - mean(fisher_df$FI_means)) / (length(fisher_df$FI_means) * sd(fisher_df$FI_means)) # Range of cumulative sum (over N*sd apparently...)
@@ -60,7 +68,10 @@ fisher_metrics function(fisher_df) {
     rcs_min <- min(s)
     rcs <- rcs_max - rcs_min
 
-    largest_drop_by_step <- max(diff(fisher_df$FI_means, lag = 8))
+    largest_drop_lag_8 <- max(diff(fisher_df$FI_means, lag = 8))
+    largest_drop_lag_16 <- max(diff(fisher_df$FI_means, lag = 16))
+
+    largest_drop_lag_16 <- mapply(diff, lag = 1:3, MoreArgs = list(fisher_df$FI_means), SIMPLIFY = F)
 
 
     # von newmann variance index
@@ -114,11 +125,6 @@ fisher_metrics function(fisher_df) {
 
 
 
-    # % points beyond one sd of weighted mean
-
-
-
-
 
     # ORIGINAL
     # MedianBRP Median buffer range percentage
@@ -133,21 +139,45 @@ fisher_metrics function(fisher_df) {
     #
     # return float(count) / n
     # R version:
-    med <- median(fisher_df$FI_means)
-    amp <- (max(fisher_df$FI_means) - min(fisher_df$FI_means)) / 10
-    #count_above <- fisher_df$FI_means > med + amp
-    count_below <- fisher_df$FI_means < med + amp
-    count <- table(count_below)[["TRUE"]] / length(fisher_df$FI_means)
-
+    medianBRP <- function(fisher_df) {
+      med <- median(fisher_df$FI_means)
+      amp <- (max(fisher_df$FI_means) - min(fisher_df$FI_means)) / 10
+      #count_above <- fisher_df$FI_means > med + amp
+      count_below <- fisher_df$FI_means < med + amp
+      count <- table(count_below)[["TRUE"]] / length(fisher_df$FI_means)
+    }
 
     # Percentage of points beyond one df from mean. Original uses weighted mean by photometric error
-    mu <- mean(fisher_df$FI_means)
-    std <- sd(fisher_df$FI_means)
-    count_above <- fisher_df$FI_means > mu + std
-    #count_below <- fisher_df$FI_means < med + amp
-    percent_greater_than_1sd <- table(count_above)[["TRUE"]] / length(fisher_df$FI_means)
+    beyond_std <- function(fisher_df, sds = 1) {
+      mu <- mean(fisher_df$FI_means)
+      std <- sd(fisher_df$FI_means) * sds
+      count_above <- fisher_df$FI_means > mu + std
+      #count_below <- fisher_df$FI_means < med + amp
+      percent_greater_than_sd <- table(count_above)[["TRUE"]] / length(fisher_df$FI_means)
+    }
 
+    # ORIGINAL
+    # Considering the last 30 (time-sorted) measurements of source magnitude,
+    # the fraction of increasing first differences minus the fraction of
+    # decreasing first differences.
+    # """
+    #
+    # def __init__(self):
+    #     self.Data = ['magnitude']
+    #
+    # def fit(self, data):
+    #     magnitude = data[0]
+    #     data_last = magnitude[-30:]
+    #
+    #     return (float(len(np.where(np.diff(data_last) > 0)[0]) -
+    #             len(np.where(np.diff(data_last) <= 0)[0])) / 30)
 
+    #Fraction of increasing and decreasing first differences
+    # altered to total fraction rather than lase 30 points
+    frac <- table(diff(fisher_df$FI_means) > 0)
+    frac_inc <- frac[["TRUE"]] / length(fisher_df$FI_means)
+    frac_dec <- frac[["FALSE"]] / length(fisher_df$FI_means)
+    (frac[["TRUE"]] - frac[["FALSE"]]) / length(fisher_df$FI_means)
 
 
     small_kurtosis <- function(fisher_df) {
@@ -162,28 +192,162 @@ fisher_metrics function(fisher_df) {
     small_kurt <- small_kurtosis(fisher_df)
 
 
+    ### I don't know what this tells us but here is the Flux percentile ratio mid20:
+    flux_percentile_rario_mid_20 <- function(fisher_df) {
+
+      f_60 <- quantile(fisher_df$FI_means, .60)[["60%"]]
+      f_40 <- quantile(fisher_df$FI_means, .40)[["40%"]]
+      f_05 <- quantile(fisher_df$FI_means, .05)[["5%"]]
+      f_95 <- quantile(fisher_df$FI_means, .95)[["95%"]]
+
+      f_40_60 <- f_60 - f_40
+      f_5_95 <- f_95 - f_05
+      f_mid_20 <- f_40_60 / f_5_95
+    }
+    f_mid_20 <- flux_percentile_rario_mid_20(fisher_df)
+
+
+    ### mid 35:
+    flux_percentile_rario_mid_35 <- function(fisher_df) {
+
+      f_325 <- quantile(fisher_df$FI_means, .325)[["32.5%"]]
+      f_675 <- quantile(fisher_df$FI_means, .675)[["67.5%"]]
+      f_05 <- quantile(fisher_df$FI_means, .05)[["5%"]]
+      f_95 <- quantile(fisher_df$FI_means, .95)[["95%"]]
+
+      f_325_675 <- f_675 - f_325
+      f_5_95 <- f_95 - f_05
+      f_mid_35 <- f_325_675 / f_5_95
+    }
+    f_mid_35 <- flux_percentile_rario_mid_35(fisher_df)
+
+
+
+    ### mid 50:
+    flux_percentile_rario_mid_50 <- function(fisher_df) {
+
+      f_25 <- quantile(fisher_df$FI_means, .25)[["25%"]]
+      f_75 <- quantile(fisher_df$FI_means, .75)[["75%"]]
+      f_05 <- quantile(fisher_df$FI_means, .05)[["5%"]]
+      f_95 <- quantile(fisher_df$FI_means, .95)[["95%"]]
+
+      f_25_75 <- f_75 - f_25
+      f_5_95 <- f_95 - f_05
+      f_mid_50 <- f_25_75 / f_5_95
+    }
+    f_mid_50 <- flux_percentile_rario_mid_50(fisher_df)
+
+
+
+
+
+    ### mid 65:
+    flux_percentile_rario_mid_65 <- function(fisher_df) {
+
+      f_175 <- quantile(fisher_df$FI_means, .175)[["17.5%"]]
+      f_825 <- quantile(fisher_df$FI_means, .825)[["82.5%"]]
+      f_05 <- quantile(fisher_df$FI_means, .05)[["5%"]]
+      f_95 <- quantile(fisher_df$FI_means, .95)[["95%"]]
+
+      f_175_825 <- f_825 - f_175
+      f_5_95 <- f_95 - f_05
+      f_mid_65 <- f_175_825 / f_5_95
+    }
+    f_mid_65 <- flux_percentile_rario_mid_65(fisher_df)
+
+
+    ### mid 80:
+    flux_percentile_rario_mid_80 <- function(fisher_df) {
+
+      f_10 <- quantile(fisher_df$FI_means, .10)[["10%"]]
+      f_90 <- quantile(fisher_df$FI_means, .90)[["90%"]]
+      f_05 <- quantile(fisher_df$FI_means, .05)[["5%"]]
+      f_95 <- quantile(fisher_df$FI_means, .95)[["95%"]]
+
+      f_10_90 <- f_90 - f_10
+      f_5_95 <- f_95 - f_05
+      f_mid_80 <- f_10_90 / f_5_95
+    }
+    f_mid_80 <- flux_percentile_rario_mid_80(fisher_df)
+
+
+
+    ### percent difference flux percentile
+    percent_diff_flux_percentile <- function(fisher_df) {
+
+      f_05 <- quantile(fisher_df$FI_means, .05)[["5%"]]
+      f_95 <- quantile(fisher_df$FI_means, .95)[["95%"]]
+      f_5_95 <- f_95 - f_05
+
+      percent_diff <- f_5_95 / median(fisher_df$FI_means)
+    }
+    percent_diff <- percent_diff_flux_percentile(fisher_df)
+
+
+
+    ### Q3−1
+    # Q3−1 is the difference between the third quartile, Q3, and the first quartile, Q1, of a raw light curve.
+    # Q1 is a split between the lowest 25% and the highest 75% of data.
+    #Q3 is a split between the lowest 75% and the highest 25% of data.
+    q31 <- quantile(fisher_df$FI_means, .75)[["75%"]] - quantile(fisher_df$FI_means, .25)[["25%"]]
 
 
 
 
 
 
-  longest run of increasing numbers
-  longest run of decreasing numbers
-  rate at longest run of increasing numbers
-  rate at longest run of decreasing numbers
 
-  longest run of increasing roc
-  longest run of decreasing roc
+    ### Needs correcting
+    con_func <- function(fisher_df, wind) {
+      N = length(fisher_df$FI_means)
+      if (N < wind) {
+        return(0)
+      }
+
+      sigma = sd(fisher_df$FI_means)
+      m = mean(fisher_df$FI_means)
+      #count = 0
+
+      for (i in (1:(N - wind))) {
+        flag = c()
+      for (j in (1:wind)) {
+        # print(fisher_df$FI_means[i])
+        # print(fisher_df$FI_means[j])
+          if (fisher_df$FI_means[i] + fisher_df$FI_means[j] > m + 2 * sigma | fisher_df$FI_means[i] + fisher_df$FI_means[j] < m - 2 * sigma) {
+        flag[i] = 1
+        #flag <- c(flag, flag[i])
+        #print(i)
+        #print(flag)
+          } else {
+        flag[i] = 0
+        #print(flag)
+          }
+        flag <- c(flag[i])
+      }
+        print(flag)
+    }
+      # break
+      # if flag:count = count + 1
+      # return count * 1.0 / (N - self.consecutiveStar + 1)
+      flag
+    }
+
+
+
+
+
+
+
+
+
+
+
+
   number of trend reversals
 
-  max diff from ave
   greatest change on y axis... (which greatest ROC at longest run pos/neg?)
 )
   # In Fisher
-  number of states
-  max/min probability (at time)(most ordered/disordered point or window)
-  probability over time?
   longest period of single state
   shortest period of single state
 }
