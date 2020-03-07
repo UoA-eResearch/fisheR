@@ -86,8 +86,8 @@ slope_rates_func <- function(fisher_df) {
 
 
 ##### Changepoint parameters for normal distribution and empirical distribution
+# Changepoints: http://members.cbio.mines-paristech.fr/~thocking/change-tutorial/RK-CptWorkshop.html
 changepoint_func <- function(fisher_df){
-    # Changepoints: http://members.cbio.mines-paristech.fr/~thocking/change-tutorial/RK-CptWorkshop.html
     # multiple changepoints, penalty default MBIC. Changes in mean and variance
     cpt_pelt <- cpt.meanvar(qfish$FI_means, method = 'PELT')
     #cpts(cpt_pelt)
