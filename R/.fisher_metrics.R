@@ -1,14 +1,3 @@
-#' Metric functions
-#'
-#' These metric functions, currently in development, are made to collapse the Fisher's Information output into single number metrics
-#'
-#' @param fisher_df A fisher output containing FI_means and time_windows
-#' @param winds Window size
-#' @param std Number of standard deviations to look beyond...
-#'
-#' @return a single row tibble with 72 metrics
-
-
 library(moments)
 library(psych)
 library(tidyverse)
@@ -477,6 +466,7 @@ q31_func <- function(fisher_df) {
 #   # return count * 1.0 / (N - self.consecutiveStar + 1)
 #   flag
 # }
+
 
 
 metrics_function <- function(fisher_df) {
