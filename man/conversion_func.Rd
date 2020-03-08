@@ -10,7 +10,7 @@ conversion_func(df)
 \item{df}{A dataframe containing time information and variables of interest}
 }
 \value{
-A dataframe with each column as numeric data
+If successful, a dataframe with each column as numeric data
 }
 \description{
 Conversion function attempts to force input data structure to correct format (i.e., numeric data). *NOTE, does not attempt to rearrange columns or format dates*. Outputs must still be manually checked.
