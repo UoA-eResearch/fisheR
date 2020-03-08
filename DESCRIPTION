@@ -13,6 +13,14 @@ Description:
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
+imports:
+	matrixStats
+	moments
+	psych
+	tibble
+	dplyr
+	changepoint
+	changepoint.np
 Suggests: 
     knitr,
     rmarkdown
