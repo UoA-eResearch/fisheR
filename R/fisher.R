@@ -34,7 +34,7 @@ fisher = function(df, sos = c(), w_size = 8, w_incre = 1, smooth_step = 3, RedRu
   }
   df[is.na(df)] = 0
 
-  if(any(rle(rowSums(df[,2:ncol(df)], na.rm = T))[[1]] >= w_size)) {
+  if(any(rle(rowSums(df[,2:ncol(df)], na.rm = T))[[1]] == w_size)) {
     stop("Input data has a number of rows containing only NA or 0 values that is equal to or greater than window size. Fisher window cannot = 0, either remove empty rows or increase window size")
   }
 
