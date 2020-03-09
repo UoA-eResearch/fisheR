@@ -238,7 +238,7 @@ von_neumann_func <- function(fisher_df) {
   tibble::tibble(
     # von newmann variance index
     # vi_von_neumann <- sum(diff(x)^2)/((length(x)-1)*var(x)) ## Eta. Removed, it is not invariant to time sampling: https://iopscience.iop.org/article/10.1088/0004-637X/735/2/68/meta#apj391424f10
-    vi_von_neumann = mssd(fisher_df$FI_means)/var(fisher_df$FI_means)
+    vi_von_neumann = psych::mssd(fisher_df$FI_means)/var(fisher_df$FI_means)
     # vi_von_neumann <- 1/((length(x)-1)*var(x)) * sum(diff(x)^2) # https://github.com/isadoranun/FATS/blob/master/FATS/FeatureFunctionLib.py
 )
 }
