@@ -115,7 +115,7 @@ changepoint_func <- function(fisher_df){
     #cpts(cpt_pelt)
     # Mean parameters
     cpt_pelt_param <- changepoint::param.est(cpt_pelt)
-    no_cpt_pelt <- length(cpts(cpt_pelt))
+    no_cpt_pelt <- length(changepoint::cpts(cpt_pelt))
     max_mean_cpt <- max(cpt_pelt_param[[1]])
     min_mean_cpt <- min(cpt_pelt_param[[1]])
     range_mean_cpt <- max_mean_cpt - min_mean_cpt
@@ -132,7 +132,7 @@ changepoint_func <- function(fisher_df){
     # multiple change points empirical distribution. General change in distribution
     cpt_pelt_np <-  changepoint.np::cpt.np(fisher_df$FI_means, nquantiles = 4*log(length(fisher_df$FI_means)))
     #cpts(cpt_pelt_np)
-    no_cpt_np <- length(cpts(cpt_pelt_np))
+    no_cpt_np <- length(changepoint::cpts(cpt_pelt_np))
     #plot(cpt_pelt_np)
     tib <- tibble::tibble(
       no_cpt_pelt = no_cpt_pelt,
