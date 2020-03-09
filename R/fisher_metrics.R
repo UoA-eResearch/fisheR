@@ -289,7 +289,7 @@ acf_length_func <- function(fisher_df) {
   while (is.na(k)) {
     lag = lag + 100
     # print(lag)
-    ac = acf(fisher_df$FI_means, lag.max = lag)
+    ac = acf(fisher_df$FI_means, lag.max = lag, plot = F)
     #print(ac[[1]])
     ac_lags <- ac[[1]]
     k <-  which(ac_lags < exp(-1))[1] - 1 #acf function indexes from 0 so don't forget the -1 on the index!
