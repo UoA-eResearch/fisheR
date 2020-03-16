@@ -40,7 +40,7 @@ summary_stats_func <- function(fisher_df) {
     mid_range = (max_fish + min_fish) / 2,
     mu = mean(fisher_df$FI_means),
     std = sd(fisher_df$FI_means),
-    std_mean_ratio <- std/mu,
+    std_mean_ratio = std/mu,
     variance = var(fisher_df$FI_means),
     skew = moments::skewness(fisher_df$FI_means),
     kurt = moments::kurtosis(fisher_df$FI_means),
