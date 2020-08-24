@@ -101,6 +101,7 @@ fisher = function(df, sos = c(), w_size = 8, w_incre = 1, smooth_step = 3, RedRu
   if (length(k_init) == 0) {
     k_init = c(1)
   }
+  number_of_states_per_tl <- number_of_states_per_tl[rowSums(is.na(number_of_states_per_tl)) != ncol(number_of_states_per_tl), ]
   FI_means = rowMeans(FI_final[,min(k_init):ncol(FI_final)])
   time_windows = df[1:nrow(FI_final) * w_incre + w_size - 1, 1]
   mean_no_states = rowMeans(number_of_states_per_tl[,min(k_init):ncol(number_of_states_per_tl)]) # function needs to be checked
