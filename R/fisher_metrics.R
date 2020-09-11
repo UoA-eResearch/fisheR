@@ -330,8 +330,12 @@ median_BRP_func <- function(fisher_df) {
   amp <- (max(fisher_df$FI_means) - min(fisher_df$FI_means)) / 10
   #count_above <- fisher_df$FI_means > med + amp
   count_below <- fisher_df$FI_means < med + amp
+  if (any(count_below == T)) {
   count <- table(count_below)[["TRUE"]] / length(fisher_df$FI_means)
   tibble::tibble(median_brp = count)
+  } else {
+    tibble::tibble(median_brp = 0)
+  }
 }
 #x9 <- median_BRP_func(fisher_df)
 
@@ -350,9 +354,12 @@ beyond_std_func <- function(fisher_df, sds = 1) {
   std <- sd(fisher_df$FI_means) * sds
   count_above <- fisher_df$FI_means > mu + std
   #count_below <- fisher_df$FI_means < med + amp
-  percent_greater_than_sd <- table(count_above)[["TRUE"]] / length(fisher_df$FI_means)
-  tibble::tibble(beyond_sd = percent_greater_than_sd)
-
+  if (any(count_above == T)) {
+	percent_greater_than_sd <- table(count_above)[["TRUE"]] / length(fisher_df$FI_means)
+	tibble::tibble(beyond_sd = percent_greater_than_sd)
+  } else {
+    tibble::tibble(beyond_sd = 0)
+  }
 }
 #x10 <- beyond_std_func(fisher_df)
 
@@ -389,6 +396,7 @@ beyond_std_func <- function(fisher_df, sds = 1) {
 
 frac_func <- function(fisher_df){
   frac <- table(diff(fisher_df$FI_means) > 0)
+  if(length(names(frac)) == 1) { frac[["TRUE"]] <- 0}
   frac_inc <- frac[["TRUE"]] / length(fisher_df$FI_means)
   frac_dec <- frac[["FALSE"]] / length(fisher_df$FI_means)
   (frac[["TRUE"]] - frac[["FALSE"]]) / length(fisher_df$FI_means)
