@@ -40,7 +40,7 @@ timing_function2 <- mapply(
 # taking timing manually from printed output
 time_df <- data.frame(time = c(14.82, 7.60, 4.14, 2.77, 2.13),
                       run = 1:5)
-plot(x = time_df$time, y = time_df$run)
+plot(x = time_df$run, y = time_df$time)
 
 ###################################
 #### To plot the time INCREASE using larger window sizes
@@ -54,7 +54,7 @@ timing_function2 <- mapply(
 # taking timing manually from printed output
 time_df2 <- data.frame(time = c(13.49, 13.38, 14.08, 15.74, 16.96),
                       run = 1:5)
-plot(x = time_df2$time, y = time_df2$run)
+plot(x = time_df2$run, y = time_df2$time)
 
 
 #####################################################################################
