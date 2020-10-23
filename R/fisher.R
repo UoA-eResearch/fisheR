@@ -40,7 +40,7 @@ fisher = function(df, sos = c(), w_size = 8, w_incre = 1, smooth_step = 3, RedRu
   colnames(number_of_states_per_tl) = paste0("tl", 1:100)
   for (i in window_seq) {
     window_index_str = paste0("wi", as.character(i))
-    Data_win = na.omit(df[i:(i+w_size - 1),2:ncol(df)])
+    Data_win = as.matrix( na.omit(df[i:(i+w_size - 1),2:ncol(df)]) )
     if (nrow(Data_win) == w_size) {
       Bin = c()
       for (m in 1:w_size) {
@@ -49,12 +49,7 @@ fisher = function(df, sos = c(), w_size = 8, w_incre = 1, smooth_step = 3, RedRu
           if (m == n) {
             Bin_temp = c(Bin_temp, "I")
           } else {
-            Bin_temp_1 = 0
-            for (k in 1:ncol(Data_win)) {
-              if (abs(Data_win[m,k] - Data_win[n,k]) <= sos[k]) {
-                Bin_temp_1 = Bin_temp_1 + 1
-              }
-            }
+            Bin_temp_1 = sum( abs( Data_win[m,] - Data_win[n,]) <= sos )
             Bin_temp = c(Bin_temp, Bin_temp_1)
           }
         }
