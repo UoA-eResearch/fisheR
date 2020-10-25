@@ -40,7 +40,7 @@ fisher = function(df, sos = c(), w_size = 8, w_incre = 1, smooth_step = 3, RedRu
   colnames(number_of_states_per_tl) = paste0("tl", 1:100)
   for (i in window_seq) {
     window_index_str = paste0("wi", as.character(i))
-    Data_win = na.omit(df[i:(i+w_size - 1),2:ncol(df)])
+    Data_win = as.matrix(na.omit(df[i:(i+w_size - 1),2:ncol(df)]))
     if (nrow(Data_win) == w_size) {
       Bin = c()
       for (m in 1:w_size) {
@@ -136,6 +136,7 @@ fisher = function(df, sos = c(), w_size = 8, w_incre = 1, smooth_step = 3, RedRu
   lines(df_FI$time_windows, df_FI$FI_smth, type="l", col="red")
   }
   print(sprintf("Completed in %.2f seconds", as.numeric(Sys.time()) - start_time))
+  print(sprintf("Checksum: %.10f", sum(df_FI)))
   #list(df = df_FI, number_of_states_per_tl = number_of_states_per_tl)
   df_FI
 }
