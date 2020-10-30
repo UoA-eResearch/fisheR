@@ -14,6 +14,8 @@
 #' @returns A dataframe where the last three columns are the Fisher's Information means, Fisher's Information smoothed and time-steps
 #library(matrixStats)
 
+IVAL <- -Inf
+
 fisher = function(df, sos = c(), w_size = 8, w_incre = 1, smooth_step = 3, RedRum = FALSE, write_out_csv = FALSE, write_out_rds = FALSE, display_plot = FALSE) {
   start_time <- as.numeric(Sys.time())
 
@@ -40,21 +42,16 @@ fisher = function(df, sos = c(), w_size = 8, w_incre = 1, smooth_step = 3, RedRu
   colnames(number_of_states_per_tl) = paste0("tl", 1:100)
   for (i in window_seq) {
     window_index_str = paste0("wi", as.character(i))
-    Data_win = as.matrix(na.omit(df[i:(i+w_size - 1),2:ncol(df)]))
+    Data_win = as.matrix(na.omit(df[i:(i+w_size - 1),2:ncol(df)]), byrow = TRUE)
     if (nrow(Data_win) == w_size) {
       Bin = c()
       for (m in 1:w_size) {
         Bin_temp = c()
         for (n in 1:w_size) {
           if (m == n) {
-            Bin_temp = c(Bin_temp, "I")
+            Bin_temp = c(Bin_temp, IVAL)
           } else {
-            Bin_temp_1 = 0
-            for (k in 1:ncol(Data_win)) {
-              if (abs(Data_win[m,k] - Data_win[n,k]) <= sos[k]) {
-                Bin_temp_1 = Bin_temp_1 + 1
-              }
-            }
+            Bin_temp_1 <- sum( abs(Data_win[m,] - Data_win[n,]) <= sos )
             Bin_temp = c(Bin_temp, Bin_temp_1)
           }
         }
@@ -62,6 +59,7 @@ fisher = function(df, sos = c(), w_size = 8, w_incre = 1, smooth_step = 3, RedRu
       }
       #print(Bin)
       FI = c()
+      i_vals <- 1:ncol(Bin)
       for (tl in 1:100) {
         if (RedRum){
           print("All work and no play makes Jack a dull boy")
@@ -71,17 +69,17 @@ fisher = function(df, sos = c(), w_size = 8, w_incre = 1, smooth_step = 3, RedRu
         Bin_2 = c()
         for (j in 1:w_size) {
           if (!(j %in% Bin_2)) {
-            Bin_1_temp = c(j)
-            for (i in 1:ncol(Bin)) {
-              if (Bin[j,i] != "I" && as.numeric(Bin[j,i]) >= tl1 && !(i %in% Bin_2)) {
-                Bin_1_temp = c(Bin_1_temp, i)
-              }
-            }
+            binj <- Bin[j,]
+            # note: the last test is redundant since IVAL = -Inf
+            Bin_1_temp <- c(j, which(!(i_vals %in% Bin_2) & (binj >= tl1) & (binj != IVAL)))
             Bin_1 = c(Bin_1, list(Bin_1_temp))
             Bin_2 = c(Bin_2, Bin_1_temp)
           }
         }
-        number_of_states_per_tl[window_index_str, paste0("tl", tl)] = length(Bin_1)
+
+        s_tl <- paste0("tl", tl)
+        number_of_states_per_tl[window_index_str, s_tl] = length(Bin_1)
+
         prob = c(0, lengths(Bin_1) / length(Bin_2), 0)
         prob_q = sqrt(prob)
         FI_temp = 0
