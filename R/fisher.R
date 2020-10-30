@@ -77,8 +77,7 @@ fisher = function(df, sos = c(), w_size = 8, w_incre = 1, smooth_step = 3, RedRu
           }
         }
 
-        s_tl <- paste0("tl", tl)
-        number_of_states_per_tl[window_index_str, s_tl] = length(Bin_1)
+        number_of_states_per_tl[window_index_str, tl] = length(Bin_1)
 
         prob = c(0, lengths(Bin_1) / length(Bin_2), 0)
         prob_q = sqrt(prob)
