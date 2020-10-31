@@ -38,10 +38,8 @@ fisher = function(df, sos = c(), w_size = 8, w_incre = 1, smooth_step = 3, RedRu
   k_init = c()
   window_seq = seq(1, nrow(df), w_incre)
   number_of_states_per_tl = matrix(ncol = 100, nrow = length(window_seq) - (w_size / w_incre - 1))
-  rownames(number_of_states_per_tl) = paste0("wi", window_seq[1:nrow(number_of_states_per_tl)])
-  colnames(number_of_states_per_tl) = paste0("tl", 1:100)
   for (i in window_seq) {
-    window_index_str = paste0("wi", as.character(i))
+    window_index = i
     Data_win = as.matrix(na.omit(df[i:(i+w_size - 1),2:ncol(df)]), byrow = TRUE)
     if (nrow(Data_win) == w_size) {
       Bin = c()
@@ -77,7 +75,7 @@ fisher = function(df, sos = c(), w_size = 8, w_incre = 1, smooth_step = 3, RedRu
           }
         }
 
-        number_of_states_per_tl[window_index_str, tl] = length(Bin_1)
+        number_of_states_per_tl[window_index, tl] <- length(Bin_1)
 
         prob = c(0, lengths(Bin_1) / length(Bin_2), 0)
         prob_q = sqrt(prob)
@@ -98,12 +96,16 @@ fisher = function(df, sos = c(), w_size = 8, w_incre = 1, smooth_step = 3, RedRu
   if (length(k_init) == 0) {
     k_init = c(1)
   }
-  number_of_states_per_tl <- number_of_states_per_tl[rowSums(is.na(number_of_states_per_tl)) != ncol(number_of_states_per_tl), ]
-  FI_means = rowMeans(FI_final[,min(k_init):ncol(FI_final)])
+
+  ncNST <- ncol(number_of_states_per_tl)
+  minKInit <- min(k_init)
+  subNST <- number_of_states_per_tl[, minKInit:ncNST]
+  number_of_states_per_tl <- number_of_states_per_tl[rowSums(is.na(number_of_states_per_tl)) != ncNST, ]
+  FI_means = rowMeans(FI_final[,minKInit:ncol(FI_final)])
   time_windows = df[1:nrow(FI_final) * w_incre + w_size - 1, 1]
-  mean_no_states = rowMeans(number_of_states_per_tl[,min(k_init):ncol(number_of_states_per_tl)]) # function needs to be checked
-  median_no_states = matrixStats::rowMedians(number_of_states_per_tl[,min(k_init):ncol(number_of_states_per_tl)]) # function needs to be checked
-  sum_of_states = rowSums(number_of_states_per_tl[,min(k_init):ncol(number_of_states_per_tl)]) # function needs to be checked
+  mean_no_states = rowMeans(subNST) # function needs to be checked
+  median_no_states = matrixStats::rowMedians(subNST) # function needs to be checked
+  sum_of_states = rowSums(subNST) # function needs to be checked
 
 
   FI_smth = c()
