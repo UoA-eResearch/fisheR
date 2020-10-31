@@ -68,8 +68,8 @@ fisher = function(df, sos = c(), w_size = 8, w_incre = 1, smooth_step = 3, RedRu
         for (j in 1:w_size) {
           if (!(j %in% Bin_2)) {
             binj <- Bin[j,]
-            # note: the last test is redundant since IVAL = -Inf
-            Bin_1_temp <- c(j, which(!(i_vals %in% Bin_2) & (binj >= tl1) & (binj != IVAL)))
+            # note: since IVAL is -Inf, the test for IVAL is now always TRUE and was removed
+            Bin_1_temp <- c(j, which(!(i_vals %in% Bin_2) & (binj >= tl1)))
             Bin_1 = c(Bin_1, list(Bin_1_temp))
             Bin_2 = c(Bin_2, Bin_1_temp)
           }
