@@ -14,6 +14,8 @@
 #' @returns A dataframe where the last three columns are the Fisher's Information means, Fisher's Information smoothed and time-steps
 #library(matrixStats)
 
+IVAL <- -Inf
+
 fisher = function(df, sos = c(), w_size = 8, w_incre = 1, smooth_step = 3, RedRum = FALSE, write_out_csv = FALSE, write_out_rds = FALSE, display_plot = FALSE) {
   start_time <- as.numeric(Sys.time())
 
@@ -36,25 +38,18 @@ fisher = function(df, sos = c(), w_size = 8, w_incre = 1, smooth_step = 3, RedRu
   k_init = c()
   window_seq = seq(1, nrow(df), w_incre)
   number_of_states_per_tl = matrix(ncol = 100, nrow = length(window_seq) - (w_size / w_incre - 1))
-  rownames(number_of_states_per_tl) = paste0("wi", window_seq[1:nrow(number_of_states_per_tl)])
-  colnames(number_of_states_per_tl) = paste0("tl", 1:100)
   for (i in window_seq) {
-    window_index_str = paste0("wi", as.character(i))
-    Data_win = na.omit(df[i:(i+w_size - 1),2:ncol(df)])
+    window_index = i
+    Data_win = as.matrix(na.omit(df[i:(i+w_size - 1),2:ncol(df)]), byrow = TRUE)
     if (nrow(Data_win) == w_size) {
       Bin = c()
       for (m in 1:w_size) {
         Bin_temp = c()
         for (n in 1:w_size) {
           if (m == n) {
-            Bin_temp = c(Bin_temp, "I")
+            Bin_temp = c(Bin_temp, IVAL)
           } else {
-            Bin_temp_1 = 0
-            for (k in 1:ncol(Data_win)) {
-              if (abs(Data_win[m,k] - Data_win[n,k]) <= sos[k]) {
-                Bin_temp_1 = Bin_temp_1 + 1
-              }
-            }
+            Bin_temp_1 <- sum( abs(Data_win[m,] - Data_win[n,]) <= sos )
             Bin_temp = c(Bin_temp, Bin_temp_1)
           }
         }
@@ -62,6 +57,7 @@ fisher = function(df, sos = c(), w_size = 8, w_incre = 1, smooth_step = 3, RedRu
       }
       #print(Bin)
       FI = c()
+      i_vals <- 1:ncol(Bin)
       for (tl in 1:100) {
         if (RedRum){
           print("All work and no play makes Jack a dull boy")
@@ -71,17 +67,16 @@ fisher = function(df, sos = c(), w_size = 8, w_incre = 1, smooth_step = 3, RedRu
         Bin_2 = c()
         for (j in 1:w_size) {
           if (!(j %in% Bin_2)) {
-            Bin_1_temp = c(j)
-            for (i in 1:ncol(Bin)) {
-              if (Bin[j,i] != "I" && as.numeric(Bin[j,i]) >= tl1 && !(i %in% Bin_2)) {
-                Bin_1_temp = c(Bin_1_temp, i)
-              }
-            }
+            binj <- Bin[j,]
+            # note: since IVAL is -Inf, the test for IVAL is now always TRUE and was removed
+            Bin_1_temp <- c(j, which(!(i_vals %in% Bin_2) & (binj >= tl1)))
             Bin_1 = c(Bin_1, list(Bin_1_temp))
             Bin_2 = c(Bin_2, Bin_1_temp)
           }
         }
-        number_of_states_per_tl[window_index_str, paste0("tl", tl)] = length(Bin_1)
+
+        number_of_states_per_tl[window_index, tl] <- length(Bin_1)
+
         prob = c(0, lengths(Bin_1) / length(Bin_2), 0)
         prob_q = sqrt(prob)
         FI_temp = 0
@@ -101,11 +96,16 @@ fisher = function(df, sos = c(), w_size = 8, w_incre = 1, smooth_step = 3, RedRu
   if (length(k_init) == 0) {
     k_init = c(1)
   }
-  FI_means = rowMeans(FI_final[,min(k_init):ncol(FI_final)])
+
+  ncNST <- ncol(number_of_states_per_tl)
+  minKInit <- min(k_init)
+  subNST <- number_of_states_per_tl[, minKInit:ncNST]
+  number_of_states_per_tl <- number_of_states_per_tl[rowSums(is.na(number_of_states_per_tl)) != ncNST, ]
+  FI_means = rowMeans(FI_final[,minKInit:ncol(FI_final)])
   time_windows = df[1:nrow(FI_final) * w_incre + w_size - 1, 1]
-  mean_no_states = rowMeans(number_of_states_per_tl[,min(k_init):ncol(number_of_states_per_tl)]) # function needs to be checked
-  median_no_states = matrixStats::rowMedians(number_of_states_per_tl[,min(k_init):ncol(number_of_states_per_tl)]) # function needs to be checked
-  sum_of_states = rowSums(number_of_states_per_tl[,min(k_init):ncol(number_of_states_per_tl)]) # function needs to be checked
+  mean_no_states = rowMeans(subNST) # function needs to be checked
+  median_no_states = matrixStats::rowMedians(subNST) # function needs to be checked
+  sum_of_states = rowSums(subNST) # function needs to be checked
 
 
   FI_smth = c()
@@ -135,6 +135,7 @@ fisher = function(df, sos = c(), w_size = 8, w_incre = 1, smooth_step = 3, RedRu
   lines(df_FI$time_windows, df_FI$FI_smth, type="l", col="red")
   }
   print(sprintf("Completed in %.2f seconds", as.numeric(Sys.time()) - start_time))
+  print(sprintf("Checksum: %.10f", sum(df_FI)))
   #list(df = df_FI, number_of_states_per_tl = number_of_states_per_tl)
   df_FI
 }
