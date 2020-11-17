@@ -71,5 +71,36 @@ medium_prof <- profvis::profvis({
 })
 
 
+#####################################################################################
+################################## version testing ##################################
+#####################################################################################
+# THIS SCRIPT IS AN ATTEMPT TO TEST TWO VERSIONS OF fisheR
+# THE SCRIPT IS NOT WORKING YET, DESPITE SPECIFYING THE COMMIT CODE, PACKAGE VERSION IS NOT CHANGING
+# library(testthat)
+# 
+# set.seed(1984)
+# x <- data.frame(time = 1:1000,
+#                 v1 = c(rnorm(500, 1, 0.1), rnorm(200, 10, 1),  rnorm(100, 100, 50), rnorm(200, 1, 0.1)),
+#                 v2 = c(rnorm(500, 1, 0.1), rnorm(200, 10, 1),  rnorm(100, 100, 50), rnorm(200, 1, 0.1)),
+#                 v3 = c(rnorm(500, 1, 0.1), rnorm(200, 10, 1),  rnorm(100, 100, 50), rnorm(200, 1, 0.1)),
+#                 v4 = c(rnorm(500, 1, 0.1), rnorm(200, 10, 1),  rnorm(100, 100, 50), rnorm(200, 1, 0.1)),
+#                 v5 = c(rnorm(500, 1, 0.1), rnorm(200, 10, 1),  rnorm(100, 100, 50), rnorm(200, 1, 0.1)),
+#                 v6 = c(rnorm(500, 1, 0.1), rnorm(200, 10, 1),  rnorm(100, 100, 50), rnorm(200, 1, 0.1))
+# )
+# 
+# test_that("string required?", {
+#   
+#   devtools::install_github("UoA-eResearch/fisheR@09f9324460f9797114a6a8e37b1248a90af82277", force = T)
+#   fish_x_old <- fisheR::fisher(x, w_size = 8)
+#   
+#   devtools::install_github("UoA-eResearch/fisheR@d7ca554576f6947c3c819744d6f0082430e7c088", force = T)
+#   fish_x_new <- fisheR::fisher(x, w_size = 8)
+#   
+#   expect_identical(fish_x_old, fish_x_new)
+#   expect_equal(fish_x_old, fish_x_new)
+# })
+
+
+
 
 
