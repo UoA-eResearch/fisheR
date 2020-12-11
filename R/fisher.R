@@ -14,9 +14,9 @@
 #' @returns A dataframe where the last three columns are the Fisher's Information means, Fisher's Information smoothed and time-steps
 #library(matrixStats)
 
-IVAL <- -Inf
 
 fisher = function(df, sos = c(), w_size = 8, w_incre = 1, smooth_step = 3, RedRum = FALSE, write_out_csv = FALSE, write_out_rds = FALSE, display_plot = FALSE) {
+  IVAL <- -Inf
   start_time <- as.numeric(Sys.time())
 
   if (class(df)[1] != "data.frame") {
@@ -38,8 +38,10 @@ fisher = function(df, sos = c(), w_size = 8, w_incre = 1, smooth_step = 3, RedRu
   k_init = c()
   window_seq = seq(1, nrow(df), w_incre)
   number_of_states_per_tl = matrix(ncol = 100, nrow = length(window_seq) - (w_size / w_incre - 1))
+  rownames(number_of_states_per_tl) = paste0("wi", window_seq[1:nrow(number_of_states_per_tl)])
+  colnames(number_of_states_per_tl) = paste0("tl", 1:100)
   for (i in window_seq) {
-    window_index = i
+    window_index = which(rownames(number_of_states_per_tl) == paste0("wi", i))
     Data_win = as.matrix(na.omit(df[i:(i+w_size - 1),2:ncol(df)]), byrow = TRUE)
     if (nrow(Data_win) == w_size) {
       Bin = c()
