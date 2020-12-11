@@ -70,6 +70,72 @@ medium_prof <- profvis::profvis({
   medium_test_fi <- fisheR::fisher(medium_test_df, w_size = 8, w_incre = 1)
 })
 
+#####################################################################################
+###################################    testing    ###################################
+#####################################################################################
+
+medium_test_df_even <- data.frame(time = 1:1000,
+                                  v1 = rnorm(1000),
+                                  v2 = rnorm(1000, 1),
+                                  v3 = rnorm(1000,2,2),
+                                  v4 = rnorm(1000),
+                                  v5 = rnorm(1000),
+                                  v6 = rnorm(1000, 1),
+                                  v7 = rnorm(1000,2,2),
+                                  v8 = rnorm(1000),
+                                  v9 = rnorm(1000,1,2))
+
+
+medium_test_df_999 <- data.frame(time = 1:999,
+                                 v1 = rnorm(999),
+                                 v2 = rnorm(999, 1),
+                                 v3 = rnorm(999,2,2),
+                                 v4 = rnorm(999),
+                                 v5 = rnorm(999),
+                                 v6 = rnorm(999, 1),
+                                 v7 = rnorm(999,2,2),
+                                 v8 = rnorm(999),
+                                 v9 = rnorm(999,1,2))
+
+
+medium_test_df_333 <- data.frame(time = 1:333,
+                                 v1 = rnorm(333),
+                                 v2 = rnorm(333, 1),
+                                 v3 = rnorm(333,2,2),
+                                 v4 = rnorm(333),
+                                 v5 = rnorm(333),
+                                 v6 = rnorm(333, 1),
+                                 v7 = rnorm(333,2,2),
+                                 v8 = rnorm(333),
+                                 v9 = rnorm(333,1,2))
+
+
+
+for (i in 1:20) {
+  for (j in 8:20) {
+    fisheR::fisher(medium_test_df_even,
+                   w_size = j,
+                   w_incre = i)
+  }
+}
+
+
+for (i in 1:20) {
+  for (j in 8:20) {
+    fisheR::fisher(medium_test_df_333,
+                   w_size = j,
+                   w_incre = i)
+  }
+}
+
+for (i in 1:20) {
+  for (j in 8:20) {
+    fisheR::fisher(medium_test_df_999,
+                   w_size = j,
+                   w_incre = i)
+  }
+}
+
 
 #####################################################################################
 ################################## version testing ##################################
