@@ -111,6 +111,7 @@ slope_rates_func <- function(fisher_df) {
 # Changepoints: http://members.cbio.mines-paristech.fr/~thocking/change-tutorial/RK-CptWorkshop.html
 changepoint_func <- function(fisher_df){
     # multiple changepoints, penalty default MBIC. Changes in mean and variance
+    # Edit this to include pelt mean; amoc mean; amoc meanvar; and pelt var. Pelt meanvar and pelt var tend to over-allocate changepoints
     cpt_pelt <- changepoint::cpt.meanvar(fisher_df$FI_means, method = 'PELT')
     #cpts(cpt_pelt)
     # Mean parameters
