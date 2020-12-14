@@ -1,7 +1,7 @@
 Package: fisheR
 Type: Package
 Title: Fisher's Information for timeseries data
-Version: 0.1.0
+Version: 0.1.1
 Author: Nick Young, Quinn Asena
 Maintainer: Quinn Asena <qase352@aucklanduni.ac.nz>
 Description:
